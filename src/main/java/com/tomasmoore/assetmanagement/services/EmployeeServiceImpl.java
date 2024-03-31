@@ -26,7 +26,10 @@ class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee findById(int id) {
         Optional<Employee> employee = employeeRepository.findById(id);
-        return employee.orElse(null);
+        if (employee.isPresent())
+            return employee.get();
+        else
+            throw new NoEmployeesFoundException("No employees found with that ID");
     }
 
     @Override
@@ -51,7 +54,18 @@ class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void update(Employee employee) {
-        //TO-DO
+        //Find the employee
+        Employee currentEmployee = findById(employee.getEmployeeId());
+
+        //Check to see if the employee exists
+        if (currentEmployee == null)
+            throw new NoEmployeesFoundException("No employee matches that ID");
+
+        //Set the updated fields
+        currentEmployee.setFirstName((employee.getFirstName() != null) ? employee.getFirstName() :  currentEmployee.getFirstName());
+        currentEmployee.setLastName((employee.getLastName() != null) ? employee.getLastName() :  currentEmployee.getLastName());
+        employeeRepository.save(currentEmployee);
+
     }
 
     @Override

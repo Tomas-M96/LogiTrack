@@ -54,17 +54,18 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void putEmployee(@Valid @PathVariable int id, @Valid @RequestBody EmployeeDTO employeeDTO) {
-        Employee employee = employeeDTO.convertToEmployee();
+    public void putEmployee(@Valid @PathVariable int id, @Valid @RequestBody EmployeeDTO payload) {
+        Employee employee = payload.convertToEmployee();
         employee.setEmployeeId(id);
         employeeService.replace(employee);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void patchEmployee() {
-        //To-do
-        //How do we handle this?
+    public void patchEmployee(@Valid @PathVariable int id, @RequestBody EmployeeDTO payload) {
+        Employee employee = payload.convertToEmployee();
+        employee.setEmployeeId(id);
+        employeeService.update(employee);
     }
 
     @DeleteMapping("/{id}")
