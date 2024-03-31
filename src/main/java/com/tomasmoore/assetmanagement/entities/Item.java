@@ -1,10 +1,10 @@
 package com.tomasmoore.assetmanagement.entities;
 
 import jakarta.persistence.*;
-
+/*
 @Entity
 @Table(name = "items")
-public class Items {
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
@@ -41,11 +41,12 @@ public class Items {
 
 
 
-    public Items() {
+    public Item() {
     }
 
-    public Items(String itemCategory, String itemName) {
+    public Item(String itemCategory, String itemName) {
         this.itemCategory = itemCategory;
         this.itemName = itemName;
     }
 }
+ */

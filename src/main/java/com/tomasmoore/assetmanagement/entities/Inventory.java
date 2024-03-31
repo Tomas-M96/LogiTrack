@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
+/*
 @Entity
 @Table(name = "inventory")
 public class Inventory {
@@ -13,18 +14,19 @@ public class Inventory {
     private long inventoryId;
     @Column(name = "last_updated")
     private Date lastUpdated;
-    @Id
-    @Column(name = "employee_id")
-    private long employeeId;
+    @OneToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     public Inventory() {
     }
 
-    public Inventory(Date lastUpdated, long employeeId) {
+    public Inventory(Date lastUpdated, Employee employee) {
         this.lastUpdated = lastUpdated;
-        this.employeeId = employeeId;
+        this.employee = employee;
     }
 
+    /*
     public long getInventoryId() {
         return inventoryId;
     }
@@ -41,11 +43,15 @@ public class Inventory {
         this.lastUpdated = lastUpdated;
     }
 
-    public long getEmployeeId() {
-        return employeeId;
-    }
+    public long getEmployee() {
+        return employee;
+        }
 
     public void setEmployeeId(long employeeId) {
         this.employeeId = employeeId;
     }
+
+
+
 }
+*/

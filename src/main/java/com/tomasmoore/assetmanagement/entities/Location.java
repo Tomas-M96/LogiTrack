@@ -1,7 +1,14 @@
 package com.tomasmoore.assetmanagement.entities;
 
+import com.tomasmoore.assetmanagement.dtos.LocationDTO;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "locations")
 public class Location {
@@ -20,8 +27,6 @@ public class Location {
     @Column(name = "country")
     private String country;
 
-    public Location() {}
-
     public Location(int buildingNumber, String street, String county, String country) {
         this.buildingNumber = buildingNumber;
         this.street = street;
@@ -36,51 +41,16 @@ public class Location {
         this.country = country;
     }
 
-    public int getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
-    }
-
-    public int getBuildingNumber() {
-        return buildingNumber;
-    }
-
-    public void setBuildingNumber(int buildingNumber) {
-        this.buildingNumber = buildingNumber;
-    }
-
-    public String getBuildingName() {
-        return buildingName;
-    }
-
-    public void setBuildingName(String buildingName) {
-        this.buildingName = buildingName;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getCounty() {
-        return county;
-    }
-
-    public void setCounty(String county) {
-        this.county = county;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public LocationDTO convertToDTO() {
+        LocationDTO locationDTO = new LocationDTO();
+        if (buildingName != null) {
+            locationDTO.setBuildingName(buildingName);
+        } else {
+            locationDTO.setBuildingNumber(buildingNumber);
+        }
+        locationDTO.setStreet(street);
+        locationDTO.setCounty(county);
+        locationDTO.setCountry(country);
+        return locationDTO;
     }
 }
