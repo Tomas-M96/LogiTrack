@@ -1,10 +1,14 @@
 package com.tomasmoore.assetmanagement.services;
 
+import com.tomasmoore.assetmanagement.dtos.LocationDTO;
 import com.tomasmoore.assetmanagement.entities.Location;
 import com.tomasmoore.assetmanagement.exceptions.NoLocationsFoundException;
+import com.tomasmoore.assetmanagement.mappers.LocationMapper;
 import com.tomasmoore.assetmanagement.repositories.LocationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,69 +16,76 @@ import java.util.Optional;
 @Service
 public class LocationServiceImpl implements LocationService {
 
+
     private final LocationRepository locationRepository;
+    private final LocationMapper locationMapper;
 
-    public LocationServiceImpl(LocationRepository locationRepository) {
+    @Autowired
+    public LocationServiceImpl(LocationRepository locationRepository, LocationMapper locationMapper) {
         this.locationRepository = locationRepository;
+        this.locationMapper = locationMapper;
     }
 
     @Override
-    public void create(Location location) {
-        locationRepository.save(location);
+    public void create(LocationDTO location) {
+        locationRepository.save(locationMapper.convertToEntity(location));
     }
 
     @Override
-    public Location findById(int id) {
+    public LocationDTO findById(int id) {
         Optional<Location> location = locationRepository.findById(id);
 
         if (location.isPresent())
-            return location.get();
+            return locationMapper.convertToDTO(location.get());
         else
             throw new NoLocationsFoundException("No locations found with that ID");
     }
 
     @Override
-    public List<Location> findAll() {
-        return locationRepository.findAll();
-    }
+    public List<LocationDTO> findAll() {
 
-    @Override
-    public void replace(Location location) {
-        //Find location
-        Location currentLocation = findById(location.getLocationId());
+        List<Location> locations = locationRepository.findAll();
 
-        //Verify it exists
-        if (currentLocation == null)
-            throw new NoLocationsFoundException("No locations found with that ID");
-        else
-            locationRepository.save(location);
-    }
-
-    @Override
-    public void update(Location location) {
-        //Find location
-        Location currentLocation = findById(location.getLocationId());
-        if (currentLocation == null)
-            throw new NoLocationsFoundException("No locations found with that ID");
-        else {
-            currentLocation.setBuildingNumber((location.getBuildingNumber() != 0) ? location.getBuildingNumber() : currentLocation.getBuildingNumber());
-            currentLocation.setBuildingName((location.getBuildingName() != null) ? location.getBuildingName() : currentLocation.getBuildingName());
-            currentLocation.setStreet((location.getStreet() != null) ? location.getStreet() : currentLocation.getStreet());
-            currentLocation.setCounty((location.getCounty() != null) ? location.getCounty() : currentLocation.getCounty());
-            currentLocation.setCountry((location.getCountry() != null) ? location.getCountry() : currentLocation.getCountry());
-            locationRepository.save(currentLocation);
+        if (!locations.isEmpty()) {
+            List<LocationDTO> locationDTOs = new ArrayList<>();
+            for (Location location : locations) {
+                locationDTOs.add(locationMapper.convertToDTO(location));
+            }
+            return locationDTOs;
+        } else {
+            throw new NoLocationsFoundException("No locations found");
         }
+    }
+
+    @Override
+    public void replace(LocationDTO dto, int id) {
+        //Find the entity
+        Location locationToReplace = locationMapper.convertToEntity(findById(id));
+
+        //Update the dto with the employee id of the entity to replace
+        dto.setLocationId(locationToReplace.getLocationId());
+
+        //Save to DB
+        locationRepository.save(locationMapper.convertToEntity(dto));
+    }
+
+    @Override
+    public void update(LocationDTO dto, int id) {
+        //Find the entity
+        Location locationToUpdate = locationMapper.convertToEntity(findById(id));
+
+        //Map the DTO to the entity
+        locationMapper.updateLocationFromDTO(dto, locationToUpdate);
+
+        //Update the DB
+        locationRepository.save(locationToUpdate);
     }
 
     @Override
     public int delete(int id) {
-        Location locationToDelete = findById(id);
+        Location locationToDelete = locationMapper.convertToEntity(findById(id));
 
-        if (locationToDelete == null)
-            throw new NoLocationsFoundException("No locations found with that ID");
-        else {
-            locationRepository.delete(locationToDelete);
-            return locationToDelete.getLocationId();
-        }
+        locationRepository.delete(locationToDelete);
+        return locationToDelete.getLocationId();
     }
 }

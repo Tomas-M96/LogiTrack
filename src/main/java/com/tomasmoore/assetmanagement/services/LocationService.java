@@ -1,14 +1,13 @@
 package com.tomasmoore.assetmanagement.services;
 
-import com.tomasmoore.assetmanagement.entities.Location;
-
+import com.tomasmoore.assetmanagement.dtos.LocationDTO;
 import java.util.List;
 
 public interface LocationService {
-    public void create(Location location);
-    public Location findById(int id);
-    public List<Location> findAll();
-    public void replace(Location location);
-    public void update(Location location);
-    public int delete(int id);
+    void create(LocationDTO location);
+    LocationDTO findById(int id);
+    List<LocationDTO> findAll();
+    void replace(LocationDTO location, int id);
+    void update(LocationDTO location, int id);
+    int delete(int id);
 }

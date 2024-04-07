@@ -1,10 +1,5 @@
 package com.tomasmoore.assetmanagement.entities.inventoryitem;
 
-
-import jakarta.persistence.*;
-
-import java.io.Serializable;
-
 /*
 @Entity
 @Table(name = "inventory_item")
@@ -25,6 +20,4 @@ public class InventoryItem {
     @Column(name = "serial_no")
     private String serialNo;
 }
-
  */
-

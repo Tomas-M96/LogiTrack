@@ -1,15 +1,14 @@
 package com.tomasmoore.assetmanagement.services;
 
-import com.tomasmoore.assetmanagement.entities.Employee;
+import com.tomasmoore.assetmanagement.dtos.EmployeeDTO;
 
 import java.util.List;
 
 public interface EmployeeService {
-    public void create(Employee employee);
-    public Employee findById(int id);
-    public List<Employee> findAll();
-    public void replace(Employee employee);
-    public void update(Employee employee);
-    public int delete(int id);
-
+    void create(EmployeeDTO employee);
+    EmployeeDTO findById(int id);
+    List<EmployeeDTO> findAll();
+    void replace(EmployeeDTO employee, int id);
+    void update(EmployeeDTO employee, int id);
+    int delete(int id);
 }

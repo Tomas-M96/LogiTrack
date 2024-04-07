@@ -1,11 +1,14 @@
 package com.tomasmoore.assetmanagement.services;
 
+import com.tomasmoore.assetmanagement.dtos.RoleDTO;
 import com.tomasmoore.assetmanagement.entities.Role;
-import com.tomasmoore.assetmanagement.exceptions.NoEmployeesFoundException;
 import com.tomasmoore.assetmanagement.exceptions.NoRolesFoundException;
+import com.tomasmoore.assetmanagement.mappers.RoleMapper;
 import com.tomasmoore.assetmanagement.repositories.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,66 +16,73 @@ import java.util.Optional;
 public class RoleServiceImpl implements RoleService{
 
     private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
 
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    @Autowired
+    public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper) {
         this.roleRepository = roleRepository;
+        this.roleMapper = roleMapper;
     }
 
     @Override
-    public void create(Role role) {
-        roleRepository.save(role);
+    public void create(RoleDTO dto) {
+        roleRepository.save(roleMapper.convertToEntity(dto));
     }
 
     @Override
-    public Role findById(int id) {
+    public RoleDTO findById(int id) {
         Optional<Role> role = roleRepository.findById(id);
 
         if (role.isPresent())
-            return role.get();
+            return roleMapper.convertToDTO(role.get());
         else
             throw new NoRolesFoundException("No roles found with that ID");
     }
 
     @Override
-    public List<Role> findAll() {
-        return roleRepository.findAll();
-    }
+    public List<RoleDTO> findAll() {
+        List<Role> roles = roleRepository.findAll();
 
-    @Override
-    public void replace(Role role) {
-        //Find the already existing role
-        Role currentRole = findById(role.getRoleId());
-
-        //Check if the role exists
-        if (currentRole == null)
-            throw new NoRolesFoundException("No roles found with that ID");
-        else
-            roleRepository.save(role);
-    }
-
-    @Override
-    public void update(Role role) {
-        Role currentRole = findById(role.getRoleId());
-
-        //Check if the role exists
-        if (currentRole == null)
-            throw new NoRolesFoundException("No roles found with that ID");
-        else {
-            currentRole.setRoleName((role.getRoleName() != null) ? role.getRoleName() :  currentRole.getRoleName());
-            currentRole.setRoleDepartment((role.getRoleDepartment() != null) ? role.getRoleDepartment() :  currentRole.getRoleDepartment());
-            roleRepository.save(currentRole);
+        if (!roles.isEmpty()) {
+            List<RoleDTO> roleDTOs = new ArrayList<>();
+            for (Role role : roles) {
+                roleDTOs.add(roleMapper.convertToDTO(role));
+            }
+            return roleDTOs;
+        } else {
+            throw new NoRolesFoundException("No roles found");
         }
+    }
+
+    @Override
+    public void replace(RoleDTO dto, int id) {
+        //Find the entity
+        Role roleToReplace = roleMapper.convertToEntity(findById(id));
+
+        //Update the dto with the employee id of the entity to replace
+        dto.setRoleId(roleToReplace.getRoleId());
+
+        //Save to DB
+        roleRepository.save(roleMapper.convertToEntity(dto));
+    }
+
+    @Override
+    public void update(RoleDTO dto, int id) {
+        //Find the entity
+        Role roleToUpdate = roleMapper.convertToEntity(findById(id));
+
+        //Map the DTO to the entity
+        roleMapper.updateRoleFromDTO(dto, roleToUpdate);
+
+        //Update the DB
+        roleRepository.save(roleToUpdate);
     }
 
     @Override
     public int delete(int id) {
-        Role roleToDelete = findById(id);
+        Role roleToDelete = roleMapper.convertToEntity(findById(id));
 
-        if (roleToDelete == null)
-            throw new NoRolesFoundException("No roles found with that ID");
-        else {
-            roleRepository.delete(roleToDelete);
-            return roleToDelete.getRoleId();
-        }
+        roleRepository.delete(roleToDelete);
+        return roleToDelete.getRoleId();
     }
 }

@@ -1,14 +1,14 @@
 package com.tomasmoore.assetmanagement.services;
 
-import com.tomasmoore.assetmanagement.entities.Role;
+import com.tomasmoore.assetmanagement.dtos.RoleDTO;
 
 import java.util.List;
 
 public interface RoleService {
-    public void create(Role role);
-    public Role findById(int id);
-    public List<Role> findAll();
-    public void replace(Role role);
-    public void update(Role role);
-    public int delete(int id);
+    void create(RoleDTO role);
+    RoleDTO findById(int id);
+    List<RoleDTO> findAll();
+    void replace(RoleDTO role, int id);
+    void update(RoleDTO role, int id);
+    int delete(int id);
 }

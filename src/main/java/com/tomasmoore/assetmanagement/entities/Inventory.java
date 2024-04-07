@@ -1,10 +1,16 @@
 package com.tomasmoore.assetmanagement.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
-/*
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "inventory")
 public class Inventory {
@@ -15,43 +21,6 @@ public class Inventory {
     @Column(name = "last_updated")
     private Date lastUpdated;
     @OneToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", foreignKey = @ForeignKey(name = "FK_EMPLOYEE"))
     private Employee employee;
-
-    public Inventory() {
-    }
-
-    public Inventory(Date lastUpdated, Employee employee) {
-        this.lastUpdated = lastUpdated;
-        this.employee = employee;
-    }
-
-    /*
-    public long getInventoryId() {
-        return inventoryId;
-    }
-
-    public void setInventoryId(long inventoryId) {
-        this.inventoryId = inventoryId;
-    }
-
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    public long getEmployee() {
-        return employee;
-        }
-
-    public void setEmployeeId(long employeeId) {
-        this.employeeId = employeeId;
-    }
-
-
-
 }
-*/

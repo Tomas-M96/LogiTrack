@@ -1,6 +1,5 @@
 package com.tomasmoore.assetmanagement.entities;
 
-import com.tomasmoore.assetmanagement.dtos.RoleDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,11 +23,5 @@ public class Role {
     @Column(name = "role_department")
     private String roleDepartment;
 
-    public RoleDTO convertToDTO() {
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setRoleName(roleName);
-        roleDTO.setRoleDepartment(roleDepartment);
-        return roleDTO;
-    }
 }
 

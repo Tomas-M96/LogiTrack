@@ -1,6 +1,5 @@
 package com.tomasmoore.assetmanagement.entities;
 
-import com.tomasmoore.assetmanagement.dtos.LocationDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +26,7 @@ public class Location {
     @Column(name = "country")
     private String country;
 
+    /*
     public Location(int buildingNumber, String street, String county, String country) {
         this.buildingNumber = buildingNumber;
         this.street = street;
@@ -40,17 +40,5 @@ public class Location {
         this.county = county;
         this.country = country;
     }
-
-    public LocationDTO convertToDTO() {
-        LocationDTO locationDTO = new LocationDTO();
-        if (buildingName != null) {
-            locationDTO.setBuildingName(buildingName);
-        } else {
-            locationDTO.setBuildingNumber(buildingNumber);
-        }
-        locationDTO.setStreet(street);
-        locationDTO.setCounty(county);
-        locationDTO.setCountry(country);
-        return locationDTO;
-    }
+     */
 }

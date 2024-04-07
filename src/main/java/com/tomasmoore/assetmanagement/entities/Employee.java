@@ -1,6 +1,5 @@
 package com.tomasmoore.assetmanagement.entities;
 
-import com.tomasmoore.assetmanagement.dtos.EmployeeDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,11 +26,4 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "location_id", foreignKey = @ForeignKey(name = "FK_LOCATION"))
     private Location location;
-
-    public EmployeeDTO convertToDTO() {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setFirstName(this.getFirstName());
-        employeeDTO.setLastName(this.getLastName());
-        return employeeDTO;
-    }
 }

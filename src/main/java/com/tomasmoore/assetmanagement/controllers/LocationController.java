@@ -1,17 +1,11 @@
 package com.tomasmoore.assetmanagement.controllers;
 
 import com.tomasmoore.assetmanagement.dtos.LocationDTO;
-import com.tomasmoore.assetmanagement.dtos.RoleDTO;
-import com.tomasmoore.assetmanagement.entities.Location;
-import com.tomasmoore.assetmanagement.entities.Role;
-import com.tomasmoore.assetmanagement.exceptions.NoLocationsFoundException;
-import com.tomasmoore.assetmanagement.exceptions.NoRolesFoundException;
 import com.tomasmoore.assetmanagement.services.LocationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping(value = "/locations")
@@ -26,46 +20,31 @@ public class LocationController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public LocationDTO getLocation(@Valid @PathVariable int id) {
-        return locationService.findById(id).convertToDTO();
+        return locationService.findById(id);
     }
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<LocationDTO> getLocations() {
-
-        List<Location> locations = locationService.findAll();
-
-        if (!locations.isEmpty()) {
-            List<LocationDTO> locationDTOs = new ArrayList<>();
-            for (Location location : locations) {
-                locationDTOs.add(location.convertToDTO());
-            }
-            return locationDTOs;
-        } else {
-            throw new NoLocationsFoundException("No locations found");
-        }
+        return locationService.findAll();
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public void postLocation(@Valid @RequestBody LocationDTO payload) {
-        locationService.create(payload.convertToLocation());
+        locationService.create(payload);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public void putLocation(@Valid @PathVariable int id, @Valid @RequestBody LocationDTO payload) {
-        Location location = payload.convertToLocation();
-        location.setLocationId(id);
-        locationService.replace(location);
+        locationService.replace(payload, id);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void patchLocation(@Valid @PathVariable int id, @RequestBody LocationDTO payload) {
-        Location location = payload.convertToLocation();
-        location.setLocationId(id);
-        locationService.update(location);
+        locationService.update(payload, id);
     }
 
     @DeleteMapping("/{id}")
